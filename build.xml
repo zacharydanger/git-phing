@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<project name="git-phing" default="default" basedir=".">
+	<taskdef name="gitpush" classname="GitPushTask" />
+
+	<target name="gitpush">
+		<gitpush remote="origin" />
+	</target>
+
+	<target name="default">
+		<echo>Set an actual target, dummy.</echo>
+	</target>
+</project>
