@@ -14,7 +14,7 @@ class GitPushTask extends GitTask {
 	 * Main entry point.
 	 */
 	public function main() {
-		$command = "git push " . $this->_remote . " " . $this->_branch;
+		$command = $this->git_path . " push " . $this->_remote . " " . $this->_branch;
 		$this->log("Pushing: " . $command);
 		passthru($command, $return);
 		$this->log("Push Return: " . $return);
