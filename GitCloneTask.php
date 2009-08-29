@@ -1,5 +1,5 @@
 <?php
-require_once 'phing/Task.php';
+require_once 'GitTask.php';
 
 class GitCloneTask extends Task {
 	private $_repo;
@@ -18,7 +18,7 @@ class GitCloneTask extends Task {
 			$this->log("GitCloneTask Fail: REPO and PATH must be set!\n");
 			exit(1);
 		}
-		$command = "git clone " . $this->_repo . " " . $this->_path;
+		$command = $this->git_path . " clone " . $this->_repo . " " . $this->_path;
 		$this->log("Attempting to clone '" . $this->_repo . "' into '" . $this->_path . "'");
 		passthru($command, $return);
 		if(intval($return) > 0) {
