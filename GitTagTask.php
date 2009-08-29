@@ -20,7 +20,7 @@ class GitTagTask extends GitTask {
 	 * Main entry point.
 	 */
 	public function main() {
-		$cmd = "git tag " . $this->_tag_name;
+		$cmd = $this->git_path . " tag " . $this->_tag_name;
 		$this->log("Running " . $cmd);
 		passthru($cmd, $return);
 		$this->log("Return: " . $return);
