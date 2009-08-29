@@ -2,9 +2,14 @@
 
 <project name="git-phing" default="default" basedir=".">
 	<taskdef name="gitpush" classname="GitPushTask" />
+	<taskdef name="gitgc" classname="GitGcTask" />
 
 	<target name="gitpush">
 		<gitpush remote="origin" />
+	</target>
+
+	<target name="gitgc">
+		<gitgc />
 	</target>
 
 	<target name="default">
