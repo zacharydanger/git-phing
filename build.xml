@@ -3,9 +3,14 @@
 <project name="git-phing" default="default" basedir=".">
 	<taskdef name="gitpush" classname="GitPushTask" />
 	<taskdef name="gitgc" classname="GitGcTask" />
+	<taskdef name="gitclone" classname="GitCloneTask" />
 
 	<target name="gitpush">
 		<gitpush remote="origin" />
+	</target>
+
+	<target name="gitclone">
+		<gitclone repo="git://github.com/zacharydanger/git-phing.git" path="/tmp/git-phing/" />
 	</target>
 
 	<target name="gitgc">
