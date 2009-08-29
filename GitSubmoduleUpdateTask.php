@@ -19,7 +19,7 @@ class GitSubmoduleUpdateTask extends GitTask {
 	 * Initializes submodules.
 	 */
 	private function _initSubmodules() {
-		$command = "git submodule foreach git submodule init";
+		$command = $this->git_path . " submodule foreach git submodule init";
 		passthru($command, $return);
 		$this->log("Initializing Git Submodules: " . $return);
 	}
@@ -28,7 +28,7 @@ class GitSubmoduleUpdateTask extends GitTask {
 	 * Updates submodules.
 	 */
 	private function _updateSubmodules() {
-		$command = "git submodule foreach git submodule update";
+		$command = $this->git_path . " submodule foreach git submodule update";
 		passthru($command, $return);
 		$this->log("Updating Git Submodules: " . $return);
 	}
