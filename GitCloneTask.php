@@ -34,10 +34,10 @@ class GitCloneTask extends GitTask {
 		}
 		if ( file_exists($this->_path) ) {
 			// Check to see if the path already exists. If it does, try to
-			// do a fetch.
+			// do a pull.
 			$dir = getcwd();
 			chdir($this->_path);
-			$command = $this->git_path . " fetch";
+			$command = $this->git_path . " pull";
 			passthru($command, $return);
 			chdir($dir);
 		} else {
