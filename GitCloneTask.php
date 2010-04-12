@@ -37,7 +37,7 @@ class GitCloneTask extends GitTask {
 			// do a fetch.
 			$dir = getcwd();
 			chdir($this->_path);
-			$command = $this->git_path . " fetch";
+			$command = $this->git_path . " fetch --tags";
 			$this->log("Attempting to fetch '" . $this->_repo . "' at '" . $this->_path . "'");
 			$this->log("Running " . $command);
 			passthru($command, $return);
