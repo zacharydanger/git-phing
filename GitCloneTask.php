@@ -9,6 +9,7 @@ require_once 'GitTask.php';
 class GitCloneTask extends GitTask {
 	private $_repo;
 	private $_path;
+	private $_onexisting;
 
 	/**
 	 * Sets the repository to clone.
@@ -25,6 +26,13 @@ class GitCloneTask extends GitTask {
 	}
 
 	/**
+	 * Sets the behaviour if path exists.
+	 */
+	public function setOnexisting($onexisting) {
+		$this->_onexisting = $onexisting;
+	}
+
+	/**
 	 * The main entry.
 	 */
 	public function main() {
@@ -33,24 +41,36 @@ class GitCloneTask extends GitTask {
 			exit(1);
 		}
 		if ( file_exists($this->_path) ) {
-			// Check to see if the path already exists. If it does, try to
-			// do a fetch.
-			$dir = getcwd();
-			chdir($this->_path);
-			$command = $this->git_path . " fetch --tags";
-			$this->log("Attempting to fetch '" . $this->_repo . "' at '" . $this->_path . "'");
-			$this->log("Running " . $command);
-			passthru($command, $return);
-			chdir($dir);
-		} else {
-			$command = $this->git_path . " clone " . $this->_repo . " " . $this->_path;
-			$this->log("Attempting to clone '" . $this->_repo . "' into '" . $this->_path . "'");
-			$this->log("Running " . $command);
-			passthru($command, $return);
-			if(intval($return) > 0) {
-				$this->log("Git Clone Failed.");
-				exit(1);
+			switch($this->_onexisting) {
+				case 'replace':
+					if ( ! $this->recursiveRmDir($this->_path) ) {
+						$this->log("GitCloneTask Fail: PATH could not be deleted!\n");
+						exit(1);
+					};
+					break;
+				case 'ignore':
+					if ( file_exists($this->_path . '/.git/config') ) {
+    					// Ignore, just return.
+    					return;
+					} else {
+                        $this->log("GitCloneTask Fail: PATH already exists but does not look like a Git repository!\n");
+                        exit(1);
+					}
+					break;
+				case 'fail':
+				default:
+					$this->log("GitCloneTask Fail: PATH already exists!\n");
+					exit(1);
+					break;
 			}
+		}
+		$command = $this->git_path . " clone " . $this->_repo . " " . $this->_path;
+		$this->log("Attempting to clone '" . $this->_repo . "' into '" . $this->_path . "'");
+		$this->log("Running " . $command);
+		passthru($command, $return);
+		if(intval($return) > 0) {
+			$this->log("Git Clone Failed.");
+			exit(1);
 		}
 	}
 }
