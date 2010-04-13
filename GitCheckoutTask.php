@@ -71,7 +71,21 @@ class GitCheckoutTask extends GitTask {
 		}
 
 		if ( $this->_branch_name !== null ) {
-			$which = 'origin/' . $this->_branch_name;
+			$branch_exists = false;
+			$check_cmd = $this->git_path . ' branch';
+			$output = array();
+			$output_string = exec($check_cmd, $output, $return);
+			$this->log('Executing: ' . $check_cmd);
+			foreach ( $output as $branch ) {
+				$branch = preg_replace('/^[\W]*/', '', $branch);
+				if ( $branch == $this->_branch_name ) {
+					$branch_exists = true;
+					break;
+				}
+			}
+			$args = $branch_exists ? '' : ' -b ';
+			$addn = $branch_exists ? '' : ' origin/' . $this->_branch_name;
+			$which = $args . $this->_branch_name . $addn;
 		}
 
 		$cmd = $this->git_path . ' checkout ' . $which;

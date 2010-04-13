@@ -28,5 +28,29 @@ class GitTask extends Task {
 	 * Main entry. Does nothing.
 	 */
 	public function main() { /* do nothing */ }
+	
+	/**
+	 * Recursively delete a directory and its children
+	 * @param string $dir Directory to delete
+	 */
+	protected function recursiveRmDir($dir) {
+		if ( is_dir($dir) ) {
+			$handle = opendir($dir);
+			while (false !== ($file = readdir($handle))) {
+				if ($file != "." && $file != "..") {
+					if ( ! $this->recursiveRmDir($dir . '/' . $file) ) {
+						return false;
+					}
+				}
+			}
+			closedir($handle);
+			return rmdir($dir);
+		} elseif ( is_file($dir) ) {
+			return unlink($dir);
+		} else {
+			return false;
+		}
+	}
+	
 }
 ?>
