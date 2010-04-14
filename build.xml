@@ -10,7 +10,7 @@
 	</target>
 
 	<target name="gitclone">
-		<gitclone repo="git://github.com/zacharydanger/git-phing.git" path="/tmp/git-phing/" />
+		<gitclone repo="git://github.com/zacharydanger/git-phing.git" path="/tmp/git-phing" />
 	</target>
 
 	<target name="gitgc">
