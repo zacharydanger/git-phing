@@ -19,18 +19,34 @@ class GitSubmoduleUpdateTask extends GitTask {
 	 * Initializes submodules.
 	 */
 	private function _initSubmodules() {
-		$command = $this->git_path . " submodule foreach git submodule init";
-		passthru($command, $return);
-		$this->log("Initializing Git Submodules: " . $return);
+		$git = $this->getGit();
+		try {
+			$git->getCommand('submodule')
+				->addArgument('foreach')
+				->addArgument('git')
+				->addArgument('submodule')
+				->addArgument('init')
+				->execute();
+		} catch(VersionControl_Git_Exception $e) {
+			throw new BuildException($e->getMessage());
+		}
 	}
 
 	/**
 	 * Updates submodules.
 	 */
 	private function _updateSubmodules() {
-		$command = $this->git_path . " submodule foreach git submodule update";
-		passthru($command, $return);
-		$this->log("Updating Git Submodules: " . $return);
+		$git = $this->getGit();
+		try {
+			$git->getCommand('submodule')
+				->addArgument('foreach')
+				->addArgument('git')
+				->addArgument('submodule')
+				->addArgument('update')
+				->execute();
+		} catch(VersionControl_Git_Exception $e) {
+			throw new BuildException($e->getMessage());
+		}
 	}
 }
 ?>

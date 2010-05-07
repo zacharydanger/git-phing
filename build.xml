@@ -4,6 +4,11 @@
 	<taskdef name="gitpush" classname="GitPushTask" />
 	<taskdef name="gitgc" classname="GitGcTask" />
 	<taskdef name="gitclone" classname="GitCloneTask" />
+	<taskdef name="gitsubmoduleupdate" classname="GitSubmoduleUpdateTask" />
+
+	<target name="gitsubmodule-update">
+		<gitsubmoduleupdate />
+	</target>
 
 	<target name="gitpush">
 		<gitpush remote="origin" />
