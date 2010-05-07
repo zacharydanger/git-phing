@@ -1,5 +1,6 @@
 <?php
 require_once 'phing/Task.php';
+require_once 'VersionControl/Git.php';
 
 /**
  * Base class for Git Tasks.
@@ -18,10 +19,27 @@ class GitTask extends Task {
 	public function init() { /* do nothing */ }
 
 	/**
+	 * Sets the VersionControl_Git object to use.
+	 */
+	public function setGit(VersionControl_Git $git) {
+		$this->_git = $git;
+	}
+
+	/**
+	 * Returns the VersionControl_Git object in use.
+	 */
+	public function getGit() {
+		if(false == isset($this->_git)) {
+			$this->_git = new VersionControl_Git();
+		}
+		return $this->_git;
+	}
+
+	/**
 	 * Optionally set the path to git.
 	 */
 	public function setGitPath($git_path) {
-		$this->git_path = $git_path;
+		$this->getGit()->setGitCommandPath($git_path);
 	}
 
 	/**
@@ -51,6 +69,5 @@ class GitTask extends Task {
 			return false;
 		}
 	}
-	
 }
 ?>
