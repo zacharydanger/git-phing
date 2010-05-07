@@ -20,4 +20,15 @@
 	<target name="default">
 		<echo>Set an actual target, dummy.</echo>
 	</target>
+
+	<target name="tests">
+		<phpunit haltonfailure="true">
+			<formatter type="plain" usefile="false" />
+			<batchtest>
+				<fileset dir="tests">
+					<include name="**/*Test*.php" />
+				</fileset>
+			</batchtest>
+		</phpunit>
+	</target>
 </project>

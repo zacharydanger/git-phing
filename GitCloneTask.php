@@ -1,5 +1,5 @@
 <?php
-require_once 'GitTask.php';
+require_once dirname(__FILE__) . '/GitTask.php';
 
 /**
  * Clones a git repository to a local directory.
@@ -37,40 +37,45 @@ class GitCloneTask extends GitTask {
 	 */
 	public function main() {
 		if(false == isset($this->_repo) || false == isset($this->_path)) {
-			$this->log("GitCloneTask Fail: REPO and PATH must be set!\n");
-			exit(1);
+			throw new BuildException("REPO and PATH must be set!");
 		}
-		if ( file_exists($this->_path) ) {
+
+		if(true == file_exists($this->_path) ) {
 			switch($this->_onexisting) {
-				case 'replace':
+				case 'replace': {
 					if ( ! $this->recursiveRmDir($this->_path) ) {
-						$this->log("GitCloneTask Fail: PATH could not be deleted!\n");
-						exit(1);
+						throw new BuildException("GitCloneTask Fail: PATH could not be deleted!");
 					};
 					break;
-				case 'ignore':
+				}
+
+				case 'ignore': {
 					if ( file_exists($this->_path . '/.git/config') ) {
-    					// Ignore, just return.
-    					return;
+						// Ignore, just return.
+						return;
 					} else {
-                        $this->log("GitCloneTask Fail: PATH already exists but does not look like a Git repository!\n");
-                        exit(1);
+						throw new BuildException("GitCloneTask Fail: PATH already exists but does not look like a Git repository!");
 					}
 					break;
-				case 'fail':
-				default:
-					$this->log("GitCloneTask Fail: PATH already exists!\n");
-					exit(1);
+				}
+
+				case 'fail': {
+					throw new BuildException("PATH Already Exists");
+				}
+
+				default: {
+					throw new BuildException("GitCloneTask Fail: PATH already exists!");
 					break;
+				}
 			}
 		}
-		$command = $this->git_path . " clone " . $this->_repo . " " . $this->_path;
-		$this->log("Attempting to clone '" . $this->_repo . "' into '" . $this->_path . "'");
-		$this->log("Running " . $command);
-		passthru($command, $return);
-		if(intval($return) > 0) {
-			$this->log("Git Clone Failed.");
-			exit(1);
+
+		$git = $this->getGit();
+		try {
+			$git->createClone($this->_repo, false, $this->_path);
+			$this->log("Repo successfully cloned.");
+		} catch(VersionControl_Git_Exception $e) {
+			throw new BuildException("Cloning failed: " . $e->getMessage());
 		}
 	}
 }
